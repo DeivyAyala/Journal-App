@@ -1,17 +1,25 @@
 import { Box, Toolbar } from "@mui/material"
 import { Narbar, SideBar } from "../components";
+import { useState } from "react";
 
 const drawerWhith = 280; // El ancho de los navegadores 
 
 export const JournalLayout = ({children, isNothingSelected}) => {
+
+  const [openDrawer, setopenDrawer] = useState(false);
+
+  const handleDawerToggle = () =>{
+    setopenDrawer(!openDrawer)
+  }
+
   return (
     <Box sx={{display:'flex'}} className="animate__animated animate__fadeIn animate__faster" >
 
         {/* Narbar drawerWhith */}
-        <Narbar drawerWhith={drawerWhith}/>
+        <Narbar drawerWhith={drawerWhith} onDrawerToggle={handleDawerToggle}/>
 
         {/* Sidebar drawerWhith */}
-        <SideBar drawerWhith={drawerWhith} />
+        <SideBar drawerWhith={drawerWhith} onDrawerToggle={handleDawerToggle} openDrawer={openDrawer} />
 
         <Box 
             component='main'

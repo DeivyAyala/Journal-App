@@ -1,9 +1,10 @@
 
-import { Box, Divider, Drawer,  List,Toolbar, Typography } from "@mui/material"
+import { Box, Divider, Drawer,  IconButton,  List,Toolbar, Typography } from "@mui/material"
 import { useSelector } from "react-redux"
 import { SideBarItem } from "./SideBarItem";
+import  Close  from "@mui/icons-material/Close";
 
-export const SideBar = ({drawerWhith = 240}) => {
+export const SideBar = ({drawerWhith = 240, openDrawer, onDrawerToggle}) => {
 
     const { displayName } = useSelector(state => state.auth);
     const { notes } = useSelector(state => state.journal);
@@ -17,11 +18,13 @@ export const SideBar = ({drawerWhith = 240}) => {
         component='nav'
         sx={{width:{ sm: drawerWhith, flexShrink:{ sm: 0} }}}
     >
+         {/* Drawer temporal para móviles */}
         <Drawer 
-        variant="permanent"  //Temporary Se puede ocultar
-        open={true}
+        variant="temporary"  //Temporary Se puede ocultar
+        open={openDrawer}
+        onClose={onDrawerToggle}
         sx={{
-            display:{xs: 'block'},
+            display:{xs: 'block', sm: 'none'},
             '& .MuiDrawer-paper': {boxSizing: 'border-box', width:drawerWhith}
         }}
         >
@@ -29,18 +32,43 @@ export const SideBar = ({drawerWhith = 240}) => {
                 <Typography variant="h6" noWrap component='div'>
                     {displayName}
                 </Typography>
+                <IconButton onClick={onDrawerToggle} sx={{ml:'auto'}} color="error">
+                    <Close/>
+                </IconButton>
             </Toolbar>
             <Divider/>
-
             <List>
-                {
-                    notes.map(note => 
-                       <SideBarItem key={note.id} {...note}/>
-                    )
-                }
+                    {
+                        notes.map(note => 
+                        <SideBarItem key={note.id} {...note}/>
+                        )
+                    }
+            </List>
+         </Drawer>
+         
+         {/* Drawer permanente en pantallas grandes */}
+         <Drawer
+         variant="permanent"
+         sx={{
+            display:{ xs: 'none', sm:'block'},
+            "& .MuiDrawer-paper": {boxSizing: 'border-box', width: drawerWhith}
+         }}
+         open
+         >
+            <Toolbar>
+                <Typography variant="h6" noWrap component='div'>
+                    {displayName}
+                </Typography>
+            </Toolbar>
+            <Divider/>
+            <List>
+                    {
+                        notes.map(note => 
+                        <SideBarItem key={note.id} {...note}/>
+                        )
+                    }
             </List>
         </Drawer>
-
     </Box>
   )
 }

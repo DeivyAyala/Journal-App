@@ -1,7 +1,8 @@
+import  DeleteOutline  from "@mui/icons-material/DeleteOutline"
 import  SaveOutlined  from "@mui/icons-material/SaveOutlined"
 import  UploadOutlined  from "@mui/icons-material/UploadOutlined"
 import 'sweetalert2/dist/sweetalert2.css'
-import { Button, Grid, Grid2, IconButton, TextField, Typography } from "@mui/material"
+import { Button, Grid, IconButton, TextField, Typography } from "@mui/material"
 import { ImageGalery } from "../components/imageGalery"
 import { setActiveNote } from "../../store/journal/journalSlice"
 import { startDeletingNote, startSaveNote, startUploadigFiles } from "../../store/journal"
@@ -9,7 +10,6 @@ import { useDispatch, useSelector } from "react-redux"
 import { useEffect, useMemo, useRef } from "react"
 import { useForm } from "../../hooks/useForm"
 import Swal from "sweetalert2"
-import  DeleteOutline  from "@mui/icons-material/DeleteOutline"
 
 
 export const NoteView = () => {
@@ -50,7 +50,22 @@ export const NoteView = () => {
     }
 
     const onDelete = () =>{
-        dispatch( startDeletingNote() )
+        Swal.fire({
+            title: "¿Estás seguro?",
+            text: "No podrás revertir esta acción",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#d33",
+            cancelButtonColor: "#3085d6",
+            confirmButtonText: "Sí, eliminar",
+            cancelButtonText: "Cancelar",
+        }).then((result) => {
+            if(result.isConfirmed){
+                dispatch( startDeletingNote() )
+                Swal.fire("Eliminado", "Tu nota ha sido eliminada", "success")
+            }
+        })
+       
     }
 
   return (
